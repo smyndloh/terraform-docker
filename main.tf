@@ -1,18 +1,3 @@
-# terraform {
-#   required_providers {
-#     docker = {
-#       source = "kreuzwerker/docker"
-#     }
-#   }
-# }
-
-# provider "docker" {}
-
-#Pull Image
-resource "docker_image" "nodered_image" {
-  name = "nodered/node-red:latest"
-} 
-
 #Create volume
 resource "null_resource" "docker_vol" {
   provisioner "local-exec"{
@@ -20,8 +5,14 @@ resource "null_resource" "docker_vol" {
   }
 }
 
+#Refrence our module/main.tf/image resource
+module "image" {
+  source = "./image"
+}
+
 #Random Strings for Unique Names
 resource "random_string" "random" {
+#  count = local.container_count
   count = 1
   length = 4
   special = false
@@ -30,17 +21,21 @@ resource "random_string" "random" {
 
 #Docker Container
 resource "docker_container" "nodered_container" {
+  #count = local.container_count
   count = 1
+  #name = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
   name = join("-", ["nodered",random_string.random[count.index].result])
   #name = "nodered"
-  image = docker_image.nodered_image.latest
+  image = module.image.image_out
   ports {
     internal = var.int_port
+    #external = var.ext_port[terraform.workspace][count.index]
     external = var.ext_port
   }
   volumes {
     container_path = "/data"
-    host_path = "/home/ubuntu/environment/terraform-docker/noderedvol"
+    host_path = "${path.cwd}/noderedvol"
+    #host_path = "/home/ubuntu/environment/terraform-docker/noderedvol"
   }
 }
 
