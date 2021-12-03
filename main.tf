@@ -8,12 +8,13 @@ resource "null_resource" "docker_vol" {
 #Refrence our module/main.tf/image resource
 module "image" {
   source = "./image"
+  image_in = var.image[terraform.workspace]
 }
 
 #Random Strings for Unique Names
 resource "random_string" "random" {
-#  count = local.container_count
-  count = 1
+  count = local.container_count
+  #count = 1
   length = 4
   special = false
   upper = false
@@ -21,16 +22,16 @@ resource "random_string" "random" {
 
 #Docker Container
 resource "docker_container" "nodered_container" {
-  #count = local.container_count
-  count = 1
-  #name = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
-  name = join("-", ["nodered",random_string.random[count.index].result])
+  count = local.container_count
+  #count = 1
+  name = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
+  #name = join("-", ["nodered",random_string.random[count.index].result])
   #name = "nodered"
   image = module.image.image_out
   ports {
     internal = var.int_port
     #external = var.ext_port[terraform.workspace][count.index]
-    external = var.ext_port
+    external = lookup(var.ext_port, terraform.workspace)[count.index]
   }
   volumes {
     container_path = "/data"
