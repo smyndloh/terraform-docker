@@ -2,7 +2,7 @@ variable "image" {
     type = map
     description = "image for container"
     default = {
-        dev = "nodered/node-red:latest"
+        dev = "nodered/node-red:latest-minimal"
         prod = "nodered/node-red:latest-minimal"
     }
 }
