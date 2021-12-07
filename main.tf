@@ -20,25 +20,19 @@ resource "random_string" "random" {
   upper = false
 }
 
-#Docker Container
-resource "docker_container" "nodered_container" {
+# Container Module
+module "container" {
+  source ="./container"
+  depends_on = [null_resource.docker_vol]
   count = local.container_count
-  #count = 1
-  name = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
-  #name = join("-", ["nodered",random_string.random[count.index].result])
-  #name = "nodered"
-  image = module.image.image_out
-  ports {
-    internal = var.int_port
-    #external = var.ext_port[terraform.workspace][count.index]
-    external = lookup(var.ext_port, terraform.workspace)[count.index]
-  }
-  volumes {
-    container_path = "/data"
-    host_path = "${path.cwd}/noderedvol"
-    #host_path = "/home/ubuntu/environment/terraform-docker/noderedvol"
-  }
+  name_in = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
+  image_in = module.image.image_out
+  int_port_in = var.int_port
+  ext_port_in = lookup(var.ext_port, terraform.workspace)[count.index]
+  container_path_in = "/data"
+  host_path_in = "${path.cwd}/noderedvol"
 }
+
 
 
 # output "container-name" {
