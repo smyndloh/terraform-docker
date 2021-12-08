@@ -1,10 +1,3 @@
-#Create volume
-resource "null_resource" "docker_vol" {
-  provisioner "local-exec"{
-    command = "mkdir noderedvol/ || true && sudo chown -R 1000:1000 noderedvol/"
-  }
-}
-
 #Refrence our module/main.tf/image resource
 module "image" {
   source = "./image"
@@ -23,7 +16,6 @@ resource "random_string" "random" {
 # Container Module
 module "container" {
   source ="./container"
-  depends_on = [null_resource.docker_vol]
   count = local.container_count
   name_in = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
   image_in = module.image.image_out

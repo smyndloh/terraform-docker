@@ -1,3 +1,9 @@
+#Create volume
+resource "docker_volume" "container_vol" {
+  #name = "${docker_container.nodered_container.name}-volume"
+  name = "${var.name_in}-volume"
+}
+
 #Docker Container
 resource "docker_container" "nodered_container" {
   name = var.name_in
@@ -7,6 +13,7 @@ resource "docker_container" "nodered_container" {
     external = var.ext_port_in
   }
   volumes {
+    volume_name = docker_volume.container_vol.name
     container_path = var.container_path_in
     host_path = var.host_path_in
   }
