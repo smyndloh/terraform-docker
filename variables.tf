@@ -14,7 +14,6 @@ variable "image" {
 }
 
 variable "ext_port" {
-    #type = number
     type = map
     
     #Validation for DEV
@@ -42,12 +41,6 @@ variable "int_port" {
     
 }
 
-# variable "env" {
-#     type = string
-#     default = "dev"
-#     description = "Environment to deploy to"
-# }
-
 #local variables
 locals {
     container_port = length(lookup(var.ext_port, terraform.workspace))
@@ -55,4 +48,15 @@ locals {
 
 locals {
     container_count = length(var.ext_port[terraform.workspace])
+}
+
+locals {
+    deployment = {
+        nodered = {
+            image = var.image["nodered"][terraform.workspace]
+           }
+        influxdb = {
+            image = var.image["nodered"][terraform.workspace]
+           }
+    } #deployment
 }

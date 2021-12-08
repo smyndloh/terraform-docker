@@ -8,10 +8,11 @@ output "ip-address" {
   description = "IP Add & external port of the container"
  }
  
- output "image-name" {
-   value = module.nodered_image.image_out
-   description = "Image Name"
- }
+# output "image-name" {
+#   # for_each = local.deployment
+#   value = module.image[keys(local.deployment)].image_out
+#   description = "Image Name"
+# }
 # output "ip-address" {
 # #   value = join(":", docker_container.nodered_container[0].ip_address, docker_container.nodered_container[0].ports[0].external)
 # #   description = "IP Add & external port of the container"
