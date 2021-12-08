@@ -13,8 +13,7 @@ module "image" {
 
 #Random Strings for Unique Names
 resource "random_string" "random" {
-  count = local.container_count
-  #count = 1
+  for_each = local.deployment
   length = 4
   special = false
   upper = false
@@ -23,12 +22,14 @@ resource "random_string" "random" {
 # Container Module
 module "container" {
   source ="./container"
-  count = local.container_count
-  name_in = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
-  image_in = module.image["nodered"].image_out
-  int_port_in = var.int_port
-  ext_port_in = var.ext_port[terraform.workspace][count.index]
-  container_path_in = "/data"
+  for_each = local.deployment
+  #name_in = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
+  name_in = join ("-", [each.key, terraform.workspace, random_string.random[each.key].result])
+  #image_in = module.image["nodered"].image_out
+  image_in = module.image[each.key].image_out
+  int_port_in = each.value.int
+  ext_port_in = each.value.ext[0]
+  container_path_in = each.value.container_path
 }
 
 

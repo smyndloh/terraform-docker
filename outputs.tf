@@ -1,12 +1,15 @@
-output "container-name" {
-  value = module.container[*].container_name
-  description = "Container Name"
-}
+# output "container-name" {
+#   value = module.container[*].container_name
+#   description = "Container Name"
+# }
 
-output "ip-address" {
-  value = flatten(module.container[*].ip_address)
-  description = "IP Add & external port of the container"
- }
+# output "ip-address" {
+#   value = flatten(module.container[*].ip_address)
+#   description = "IP Add & external port of the container"
+# }
+ 
+ 
+ 
  
 # output "image-name" {
 #   # for_each = local.deployment
