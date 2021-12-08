@@ -9,7 +9,7 @@ output "ip-address" {
  }
  
  output "image-name" {
-   value = module.image.image_out
+   value = module.nodered_image.image_out
    description = "Image Name"
  }
 # output "ip-address" {

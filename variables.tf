@@ -2,8 +2,14 @@ variable "image" {
     type = map
     description = "image for container"
     default = {
+    nodered = {
         dev = "nodered/node-red:latest-minimal"
         prod = "nodered/node-red:latest-minimal"
+       }
+    influxdb = {
+        dev = "quay.io/influxdb/influxdb:v2.0.2"
+        prod = "quay.io/influxdb/influxdb:v2.0.2"
+       }
     }
 }
 
@@ -48,5 +54,5 @@ locals {
 }
 
 locals {
-    container_count = length(var.ext_port)
+    container_count = length(var.ext_port[terraform.workspace])
 }
