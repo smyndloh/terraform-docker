@@ -1,3 +1,9 @@
+output "app-access" {
+  value = [for x in module.container[*]: x]
+  description = "Container name & Socket"
+}
+
+
 # output "container-name" {
 #   value = module.container[*].container_name
 #   description = "Container Name"
