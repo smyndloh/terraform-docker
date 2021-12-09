@@ -15,7 +15,6 @@ variable "image" {
 
 variable "ext_port" {
     type = map
-    
     #Validation for DEV
     # validation {
     #     condition = max(var.ext_port["dev"]...) <=65535 && min(var.ext_port["dev"]...) >= 1980
@@ -27,7 +26,6 @@ variable "ext_port" {
     #     condition = max(var.ext_port["prod"]...) < 1980 && min(var.ext_port["prod"]...) >= 1880
     #     error_message = "The external port # must be in the range 1880-1979."
     # }
-    
 }
 
 variable "int_port" {
@@ -38,7 +36,6 @@ variable "int_port" {
         condition = var.int_port < 1881 && var.int_port > 0
         error_message = "The external port # must be in the range 0-1881."
     }
-    
 }
 
 #local variables
@@ -53,12 +50,14 @@ variable "int_port" {
 locals {
     deployment = {
         nodered = {
+            container_count = length(var.ext_port["nodered"][terraform.workspace])
             image = var.image["nodered"][terraform.workspace]
             int = 1880
             ext = var.ext_port["nodered"][terraform.workspace]
             container_path = "/data"
            }
         influxdb = {
+            container_count = length(var.ext_port["influxdb"][terraform.workspace])
             image = var.image["influxdb"][terraform.workspace]
             int = 8086
             ext = var.ext_port["influxdb"][terraform.workspace]
