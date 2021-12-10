@@ -1,5 +1,5 @@
 output "app-access" {
-  value = [for x in module.container[*]: x]
+  value       = [for x in module.container[*] : x]
   description = "Container name & Socket"
 }
 
@@ -13,10 +13,10 @@ output "app-access" {
 #   value = flatten(module.container[*].ip_address)
 #   description = "IP Add & external port of the container"
 # }
- 
- 
- 
- 
+
+
+
+
 # output "image-name" {
 #   # for_each = local.deployment
 #   value = module.image[keys(local.deployment)].image_out
